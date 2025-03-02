@@ -243,7 +243,8 @@ func parse(content : String, max_width:int = 0,  file_path:String = '', docs_pat
 
 	for i in imagenames.size():
 		var imagelink_to_use = imagelinks[i]
-#		if imagelink_to_use.begins_with("http"):
+		if imagelink_to_use.begins_with("http"):
+			print("LINK:" + imagelink_to_use)
 #			var path_parts = imagelink_to_use.split("/Documentation/")
 #			if path_parts.size() > 1:
 #				imagelink_to_use = docs_path +"/"+ path_parts[1]

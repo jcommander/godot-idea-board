@@ -1,5 +1,14 @@
-# godot-idea-board
 
+# godot-idea-board
+## Changes made by this fork:
+
+ - Automatic Fetching of GitHub README if Repo URL is in Title or first Line of a TxtDoc/CommentNode (e.g. "https://github.com/Herbherth/GDScript-Quality-of-Life")
+ - Supports basic <img> HTML Tags
+ - Max Image Width with extra XL Size for big Images
+ - Downloading/Caching Images
+ - (Auto Scroll to End of File after converting markdown) > needs testing in original
+
+---
 Design all Godot editor items. Godot4 addon.
 
 [日本語READMEはこちら japanese readme is here](#jpreadme)

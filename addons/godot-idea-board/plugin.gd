@@ -36,7 +36,7 @@ func _get_plugin_name():
 	return "Board"
 
 func _get_plugin_icon():
-	return get_editor_interface().get_editor_theme().get_icon("Panel", "EditorIcons")
+	return get_editor_interface().get_editor_theme().get_icon("CanvasLayer", "EditorIcons")
 
 
 func _make_visible(visible):

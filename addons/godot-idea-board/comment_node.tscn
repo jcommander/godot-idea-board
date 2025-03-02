@@ -1,14 +1,20 @@
-[gd_scene load_steps=16 format=3 uid="uid://qn1mmq344o61"]
+[gd_scene load_steps=28 format=3 uid="uid://qn1mmq344o61"]
 
-[ext_resource type="Texture2D" path="res://addons/godot-idea-board/icon/handle.svg" id="1_0jksm"]
-[ext_resource type="Script" path="res://addons/godot-idea-board/comment_node.gd" id="1_pfk21"]
+[ext_resource type="Texture2D" uid="uid://byytkx7puc143" path="res://addons/godot-idea-board/icon/handle.svg" id="1_0jksm"]
 [ext_resource type="StyleBox" uid="uid://bqp6u8a2jbsek" path="res://addons/godot-idea-board/theme/frame_stylebox.tres" id="2_gkf8t"]
-[ext_resource type="Script" path="res://addons/godot-idea-board/context_menu/comment_menu.gd" id="3_at1ac"]
+[ext_resource type="Script" uid="uid://dq4i8adwuoydv" path="res://addons/godot-idea-board/context_menu/comment_menu.gd" id="3_at1ac"]
 [ext_resource type="StyleBox" uid="uid://bacwowhkqlri7" path="res://addons/godot-idea-board/theme/selected_frame_stylebox.tres" id="3_v88km"]
+[ext_resource type="Script" uid="uid://bjo6pcrnkhn2q" path="res://addons/godot-idea-board/cmdr_comment_node.gd" id="4_hshvl"]
 [ext_resource type="StyleBox" uid="uid://dp23tuoxcdmsm" path="res://addons/godot-idea-board/theme/header_lineedit_stylebox.tres" id="6_r7dye"]
 [ext_resource type="StyleBox" uid="uid://dd45kulojlvij" path="res://addons/godot-idea-board/theme/focused_header_lineedit_stylebox.tres" id="7_rawt7"]
 [ext_resource type="StyleBox" uid="uid://do10b3bjhp1et" path="res://addons/godot-idea-board/theme/transparent_style_box_line.tres" id="8_alaah"]
-[ext_resource type="Script" path="res://addons/godot-idea-board/md/markdownlabel.gd" id="8_hg7xp"]
+[ext_resource type="Script" uid="uid://8scbpvcn756l" path="res://addons/godot-idea-board/md/cmdr_markdownlabel.gd" id="8_xt5l1"]
+[ext_resource type="Script" uid="uid://mcwivls1p1ae" path="res://addons/godot-idea-board/md/header_formats/h1_format.gd" id="9_fb3c7"]
+[ext_resource type="Script" uid="uid://bbntirk5kmcrh" path="res://addons/godot-idea-board/md/header_formats/h2_format.gd" id="10_ri5sg"]
+[ext_resource type="Script" uid="uid://b484a6pddgds7" path="res://addons/godot-idea-board/md/header_formats/h3_format.gd" id="11_h0100"]
+[ext_resource type="Script" uid="uid://cgw1gh2y2hfhl" path="res://addons/godot-idea-board/md/header_formats/h4_format.gd" id="12_0fp4q"]
+[ext_resource type="Script" uid="uid://15d7ceo3a7o2" path="res://addons/godot-idea-board/md/header_formats/h5_format.gd" id="13_3jqsa"]
+[ext_resource type="Script" uid="uid://cyupb2txfucvh" path="res://addons/godot-idea-board/md/header_formats/h6_format.gd" id="14_7mmqo"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0sw32"]
 
@@ -27,6 +33,60 @@ content_margin_right = 8.0
 content_margin_bottom = 8.0
 color = Color(1, 1, 1, 1)
 thickness = 2
+
+[sub_resource type="Resource" id="Resource_smvl8"]
+resource_local_to_scene = true
+script = ExtResource("9_fb3c7")
+font_size = 2.285
+is_bold = false
+is_italic = false
+is_underlined = false
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_8tt08"]
+resource_local_to_scene = true
+script = ExtResource("10_ri5sg")
+font_size = 1.714
+is_bold = false
+is_italic = false
+is_underlined = false
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_083n0"]
+resource_local_to_scene = true
+script = ExtResource("11_h0100")
+font_size = 1.428
+is_bold = false
+is_italic = false
+is_underlined = false
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_ovg5l"]
+resource_local_to_scene = true
+script = ExtResource("12_0fp4q")
+font_size = 1.142
+is_bold = false
+is_italic = false
+is_underlined = false
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_pboir"]
+resource_local_to_scene = true
+script = ExtResource("13_3jqsa")
+font_size = 1.0
+is_bold = false
+is_italic = false
+is_underlined = false
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_ykhjg"]
+resource_local_to_scene = true
+script = ExtResource("14_7mmqo")
+font_size = 0.857
+is_bold = false
+is_italic = false
+is_underlined = false
+font_color = Color(1, 1, 1, 1)
 
 [node name="CommentNode" type="GraphNode"]
 offset_right = 132.0
@@ -47,7 +107,7 @@ slot/0/right_type = 0
 slot/0/right_color = Color(1, 1, 1, 1)
 slot/0/right_icon = null
 slot/0/draw_stylebox = true
-script = ExtResource("1_pfk21")
+script = ExtResource("4_hshvl")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -114,11 +174,18 @@ size_flags_horizontal = 3
 mouse_filter = 2
 mouse_default_cursor_shape = 13
 theme_override_constants/caret_width = 3
-theme_override_styles/normal = ExtResource("6_r7dye")
 theme_override_styles/focus = ExtResource("7_rawt7")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_ftuq2")
+theme_override_styles/normal = ExtResource("6_r7dye")
 alignment = 1
 expand_to_text_length = true
+
+[node name="GitHubButton" type="Button" parent="MarginContainer/VB/TitleHBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_default_cursor_shape = 2
+icon_alignment = 1
 
 [node name="LockedButton" type="Button" parent="MarginContainer/VB/TitleHBoxContainer"]
 unique_name_in_owner = true
@@ -174,6 +241,12 @@ custom_minimum_size = Vector2(96, 64)
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 2
+mouse_force_pass_scroll_events = false
+theme_override_font_sizes/bold_italics_font_size = 18
+theme_override_font_sizes/italics_font_size = 18
+theme_override_font_sizes/mono_font_size = 18
+theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/bold_font_size = 18
 theme_override_styles/focus = SubResource("StyleBoxLine_pd02s")
 theme_override_styles/normal = SubResource("StyleBoxLine_pd02s")
 bbcode_enabled = true
@@ -181,7 +254,13 @@ scroll_following = true
 autowrap_mode = 1
 threaded = true
 selection_enabled = true
-script = ExtResource("8_hg7xp")
+script = ExtResource("8_xt5l1")
+h1 = SubResource("Resource_smvl8")
+h2 = SubResource("Resource_8tt08")
+h3 = SubResource("Resource_083n0")
+h4 = SubResource("Resource_ovg5l")
+h5 = SubResource("Resource_pboir")
+h6 = SubResource("Resource_ykhjg")
 
 [node name="ColorPickerControl" type="Control" parent="MarginContainer/VB"]
 unique_name_in_owner = true

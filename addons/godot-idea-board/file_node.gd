@@ -413,11 +413,12 @@ func _on_pressed_sound_play_button():
 	audio_stream_player.play()
 
 func _on_pressed_script_icon_button():
-	var interface = _parent.editor_interface
-	var resource = ResourceLoader.load(script_path)
-	interface.edit_resource(resource)
-	if resource is Script:
-		interface.set_main_screen_editor("Script")
+	#var interface = _parent.editor_interface
+	#var resource = ResourceLoader.load(script_path)
+	EditorInterface.select_file(script_path)
+	#EditorInterface.edit_script(load(script_path)) # Cmdr: changed from interface.edit_resource(resource)
+	#if resource is Script:
+	#	interface.set_main_screen_editor("Script")
 
 func _on_resize_request(new_minsize):
 	_resize(new_minsize)

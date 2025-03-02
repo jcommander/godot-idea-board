@@ -16,6 +16,9 @@ extends RichTextLabel
 ##
 ## @tutorial(Github repository): https://github.com/daenvil/MarkdownLabel
 
+const LARGE_IMG_FILE_PREFIX := "CMDR_XL__"
+const LARGE_IMG_FILE_MIN_WIDTH := 1024
+
 const _ESCAPE_PLACEHOLDER := ";$\uFFFD:%s$;"
 const _ESCAPEABLE_CHARACTERS := "\\*_~`[]()\"<>#-+.!"
 const _ESCAPEABLE_CHARACTERS_REGEX := "[\\\\\\*\\_\\~`\\[\\]\\(\\)\\\"\\<\\>#\\-\\+\\.\\!]"
@@ -50,6 +53,7 @@ const H6Format = preload("res://addons/godot-idea-board/md/header_formats/h6_for
 #endregion
 
 #region Private:
+var _ready_called := false
 var _converted_text: String
 var _indent_level: int
 var _escaped_characters_map := {}
@@ -63,13 +67,21 @@ var _debug_mode := false
 #endregion
 
 #region Built-in methods:
-func _init(markdown_text: String = "") -> void:
-	bbcode_enabled = true
-	self.markdown_text = markdown_text
-	if automatic_links:
-		meta_clicked.connect(_on_meta_clicked)
+# Cmdr: Move _init code to _ready to enable getting nodes
+#func _init(markdown_text: String = "") -> void:
+	#bbcode_enabled = true
+	#self.markdown_text = markdown_text
+	#if automatic_links:
+		#meta_clicked.connect(_on_meta_clicked)
 
 func _ready() -> void:
+	_ready_called = true
+	print("md _ready")
+	bbcode_enabled = true
+	#self.markdown_text = markdown_text
+	if automatic_links:
+		meta_clicked.connect(_on_meta_clicked)
+	
 	h1.connect("_updated",_update)
 	h1.connect("changed",_update)
 	h2.connect("_updated",_update)
@@ -121,38 +133,44 @@ func display_file(file_path: String) -> void:
 
 #region Private methods:
 func _update() -> void:
-	text = _convert_markdown(markdown_text)
+	# Cmdr: await _convert_markdown for cmdr_markdownlabel and scroll to line
+	text = await _convert_markdown(markdown_text)
 	queue_redraw()
 
 func _set_markdown_text(new_text: String):
-	markdown_text = new_text
-	_update()
+	if _ready_called:
+		markdown_text = new_text
+		print("_set_markdown called")
+		_update()
+	
 
+# Cmdr: no more update() since it gets called on _init
 func _set_h1_format(new_format: H1Format):
 	h1 = new_format
-	_update()
+	#_update()
 
 func _set_h2_format(new_format: H2Format):
 	h2 = new_format
-	_update()
+	#_update()
 
 func _set_h3_format(new_format: H3Format):
 	h3 = new_format
-	_update()
+	#_update()
 
 func _set_h4_format(new_format: H4Format):
 	h4 = new_format
-	_update()
+	#_update()
 
 func _set_h5_format(new_format: H5Format):
 	h5 = new_format
-	_update()
+	#_update()
 
 func _set_h6_format(new_format: H6Format):
 	h6 = new_format
-	_update()
+	#_update()
 
 func _convert_markdown(source_text = "") -> String:
+	#print("orig: ", source_text)
 	if not bbcode_enabled:
 		push_warning("WARNING: MarkdownLabel node will not format Markdown syntax if it doesn't have 'bbcode_enabled=true'")
 		return source_text
@@ -273,8 +291,13 @@ func _convert_markdown(source_text = "") -> String:
 					if title_result:
 						title = title_result.get_string(1)
 						url = url.rstrip(" ").trim_suffix(title_result.get_string()).rstrip(" ")
+					# Cmdr: Max Image Width
+					var bbcode_img_tag := "[img]%s[/img]"
+					if url.get_file().begins_with(LARGE_IMG_FILE_PREFIX):
+						bbcode_img_tag = "[img=" + str(LARGE_IMG_FILE_MIN_WIDTH) + "]%s[/img]"
+					# print(_processed_line)
 					url = _escape_chars(url)
-					_processed_line = _processed_line.erase(_start,_end-_start).insert(_start,"[img]%s[/img]" % url)
+					_processed_line = _processed_line.erase(_start,_end-_start).insert(_start, bbcode_img_tag % url)
 					if title_result and title:
 						_processed_line = _processed_line.insert(_start+12+url.length()+_text.get_string(1).length(),"[/hint]").insert(_start,"[hint=%s]"%title)
 					_debug("... hyperlink: "+result.get_string())
@@ -283,7 +306,7 @@ func _convert_markdown(source_text = "") -> String:
 				break
 
 		# Links
-		var link_pattern := "\\[(.*?)\\]\\((.*?)\\)"
+		var link_pattern := r"\[(?!url=)(.*?)\]\((.*?)\)" # Cmdr: Prevent parsing twice by using negative lookahead for url=, changed from \\[(.*?)\\]\\((.*?)\\)"
 		while true:
 			regex.compile(link_pattern)
 			var result = regex.search(_processed_line)
@@ -310,6 +333,7 @@ func _convert_markdown(source_text = "") -> String:
 					if title_result and title:
 						_processed_line = _processed_line.insert(_start+_text.get_start()+12+url.length()+_text.get_string(1).length(),"[/hint]").insert(_start+_text.get_start(),"[hint=%s]"%title)
 					_debug("... hyperlink: "+result.get_string())
+					#print(_processed_line)
 					break
 			if not found_proper_match:
 				break

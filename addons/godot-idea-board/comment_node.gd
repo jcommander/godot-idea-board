@@ -1,7 +1,7 @@
 #01. tool
 @tool
 #02. class_name
-
+class_name SekkeiCommentNode
 #03. extends
 extends GraphNode
 #-----------------------------------------------------------
@@ -46,7 +46,7 @@ var dragging: = false
 #-----------------------------------------------------------
 #10. private variables
 #-----------------------------------------------------------
-const Markdownlabel = preload("res://addons/godot-idea-board/md/markdownlabel.gd")
+#const Markdownlabel = preload("res://addons/godot-idea-board/md/cmdr_markdownlabel.gd")
 #-----------------------------------------------------------
 #11. onready variables
 #-----------------------------------------------------------
@@ -113,9 +113,6 @@ func init(data:Dictionary = {}):
 		sub_color = Color.from_string(data.sub_color,Color.WHITE)
 		_on_changed_sub_color_context_menu.bind(sub_color).call_deferred()
 
-	if "is_md" in data and data.is_md:
-		markdown_toggled_button.button_pressed = true
-		_on_toggled_markdown_toggled_button.bind(true).call_deferred()
 	if data.has("selectable"): #ロック
 		if !data.selectable:
 			context_menu.set_item_checked.bind(0,true).call_deferred()
@@ -141,6 +138,12 @@ func init(data:Dictionary = {}):
 			markdown_toggled_button.visible = true
 		else:
 			markdown_toggled_button.visible = false
+
+	# Cmdr: move code down
+	if "is_md" in data and data.is_md:
+		print("pressed")
+		markdown_toggled_button.button_pressed = true
+		_on_toggled_markdown_toggled_button.bind(true).call_deferred()
 
 	sub_color_button.icon = _parent.get_icon("Panels1")
 
@@ -183,6 +186,7 @@ func init(data:Dictionary = {}):
 
 
 func _ready():
+	print("commentnode _ready")
 	for item in get_titlebar_hbox().get_children():
 		item.visible = false
 		item.size = Vector2.ZERO

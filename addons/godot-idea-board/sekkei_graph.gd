@@ -497,8 +497,11 @@ func make_edit(node:GraphNode) -> void:
 	data.is_md = false
 	if FileAccess.file_exists(data.path):
 		var file := FileAccess.open(data.path,FileAccess.READ)
-		data.header_text = data.path.get_file()
+		var base_dir: String = data.path.get_base_dir()
+		var parent_dir := base_dir.substr(base_dir.rfind("/")+1)
+		data.header_text = parent_dir + "/" + data.path.get_file() # Cmdr: changed from data.path.get_file()
 		data.text_edit_text = file.get_as_text()
+		data.is_md = data.path.get_extension() == "md"
 	else:
 		data.text_edit_text = "path " + data.path + "is not read."
 	text_node.init(data)
@@ -674,7 +677,7 @@ func _add_node(scn_node, pos) -> GraphNode:
 	var offset = scroll_offset + pos
 	offset = offset / zoom # ズームの分位置を変える
 	node.position_offset = snap(offset)
-	add_child(node)
+	add_child(node, true)
 #	if node is group_node_script:
 #		move_child(node, 0)
 	set_dirty()
